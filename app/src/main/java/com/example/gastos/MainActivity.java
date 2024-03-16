@@ -16,6 +16,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -177,6 +179,34 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_custom_actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        // Identificar la acción del menú y realizar las operaciones correspondientes
+        switch (id) {
+            case R.id.menu_add_expense:
+                // Acción para añadir un nuevo gasto
+                Intent addExpenseIntent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(addExpenseIntent);
+                return true;
+            case R.id.menu_view_history:
+                // Acción para ver el historial de gastos
+                Intent viewHistoryIntent = new Intent(MainActivity.this, InfoGastosActivity.class);
+                startActivity(viewHistoryIntent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void intialize() {
         input_gasto=findViewById(R.id.Gasto);

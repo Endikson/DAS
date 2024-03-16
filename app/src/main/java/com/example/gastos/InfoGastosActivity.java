@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -44,5 +46,32 @@ public class InfoGastosActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_custom_actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        // Identificar la acción del menú y realizar las operaciones correspondientes
+        switch (id) {
+            case R.id.menu_add_expense:
+                // Acción para añadir un nuevo gasto
+                Intent addExpenseIntent = new Intent(InfoGastosActivity.this, MainActivity.class);
+                startActivity(addExpenseIntent);
+                return true;
+            case R.id.menu_view_history:
+                // Acción para ver el historial de gastos
+                Intent viewHistoryIntent = new Intent(InfoGastosActivity.this, InfoGastosActivity.class);
+                startActivity(viewHistoryIntent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
