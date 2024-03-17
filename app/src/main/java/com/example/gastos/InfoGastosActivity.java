@@ -15,27 +15,32 @@ import android.widget.Button;
 
 public class InfoGastosActivity extends AppCompatActivity {
 
+    // Declaración de variables de clase
     private RecyclerView myrecylerview;
     private Button boton_volver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_gastos);
 
+        // Asignación de vistas a las variables
         myrecylerview=findViewById(R.id.myrecycler);
         boton_volver=findViewById(R.id.Boton_volver);
 
+        // Creación del adaptador y configuración del RecyclerView
         MyAdapter recycleadapter = new MyAdapter(this);
         myrecylerview.setAdapter(recycleadapter);
         myrecylerview.setLayoutManager(
                 new LinearLayoutManager(this));
+
+        // Añadir decoración de línea divisoria al RecyclerView
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(this,
                         DividerItemDecoration.VERTICAL);
         myrecylerview.addItemDecoration(dividerItemDecoration);
 
-
-
+        // Configuración del botón "Volver" para regresar a la actividad principal
         boton_volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,12 +53,14 @@ public class InfoGastosActivity extends AppCompatActivity {
         });
     }
 
+    // Método para inflar el menú de opciones en la ActionBar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_custom_actionbar, menu);
         return true;
     }
 
+    // Método para manejar la selección de elementos del menú de opciones
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

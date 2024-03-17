@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 
 public class DBHelper {
 
+    // Definición de constantes para la base de datos y las tablas
     public static final String NOMBRE_DB="InfoGastos";
     public static final int DATABASE_VERSION=1;
     public static final String NOMBRE_TABLA="Gastos";
@@ -26,6 +27,7 @@ public class DBHelper {
     public static final String NOMBRE_TABLA1="GastosTotales";
     public static final String GASTO_TOTAL_POR_ANO="GastoTotalPorAno";
 
+    // Sentencias SQL para crear las tablas
     private static final String DB_CREATE="create table "+NOMBRE_TABLA+"("+NOMBRE_GASTO+" TEXT not null, "+
             ANO+" INTEGER not null, "+DINERO+" REAL not null check ("+DINERO+">0),"+FECHA+" TEXT not null);";
 
@@ -38,16 +40,21 @@ public class DBHelper {
     private DBHelper dbHelper;
     private Cursor c;
     private double total=0;
+
+    // Método para abrir la base de datos
     public DBHelper open()
     {
         sqLiteDatabase=myDBAdapter.getWritableDatabase();
         return this;
     }
+
+    // Método para cerrar la base de datos
     public void close()
     {
         sqLiteDatabase.close();
     }
 
+    // Método para insertar datos en la tabla "Gastos"
     public long insertdata(String gasto,int ano,double dinero,String fecha)
     {
         ContentValues contentValues=new ContentValues();
@@ -81,30 +88,35 @@ public class DBHelper {
         // Llamada al método para guardar en archivo de texto
         guardarEnArchivoTexto("Nombre del gasto: " + gasto + ", Año: " + ano + ", Dinero gastado: " + dinero + ", Fecha: " + fecha);
 
-
+        // Devolver el ID de la fila insertada en la tabla "Gastos"
         return sqLiteDatabase.insert(NOMBRE_TABLA,null,contentValues);
     }
 
+    // Constructor de la clase DBHelper
     public DBHelper(Context context) {
         this.context = context;
         myDBAdapter=new MyDBAdapter(context,NOMBRE_DB,null,DATABASE_VERSION);
     }
 
+    // Método para obtener todas las entradas de la base de datos utilizando una consulta SQL personalizada
     public Cursor getAllEntries(String sql) {
         return sqLiteDatabase.rawQuery(sql,null);
     }
 
+    // Clase interna para gestionar la creación y actualización de la base de datos
     public static class MyDBAdapter extends SQLiteOpenHelper{
         public MyDBAdapter(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
         }
 
+        // Método para crear las tablas de la base de datos
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DB_CREATE);
             db.execSQL(DB_CREATE1);
         }
 
+        // Método para actualizar las tablas de la base de datos
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("drop table if exists "+NOMBRE_TABLA);
@@ -115,16 +127,18 @@ public class DBHelper {
 
     }
 
+    // Método para guardar datos en un archivo de texto
     public void guardarEnArchivoTexto(String texto) {
         try {
-            FileOutputStream fileOutputStream = context.openFileOutput("datos.txt", Context.MODE_PRIVATE);
-            fileOutputStream.write(texto.getBytes());
+            FileOutputStream fileOutputStream = context.openFileOutput("datos.txt", Context.MODE_APPEND);
+            fileOutputStream.write((texto + "\n").getBytes());
             fileOutputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // Método para leer datos desde un archivo de texto
     public String leerArchivoTexto() {
         StringBuilder stringBuilder = new StringBuilder();
         try {
