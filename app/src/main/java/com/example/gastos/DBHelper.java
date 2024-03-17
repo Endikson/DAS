@@ -8,6 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+
 public class DBHelper {
 
     public static final String NOMBRE_DB="InfoGastos";
@@ -73,6 +78,10 @@ public class DBHelper {
         {
             sqLiteDatabase.update(NOMBRE_TABLA1,contentValues1,NOMBRE_GASTO+"=? and "+ANO+"=?",new String[]{gasto,String.valueOf(ano)});
         }
+        // Llamada al método para guardar en archivo de texto
+        guardarEnArchivoTexto("Nombre del gasto: " + gasto + ", Año: " + ano + ", Dinero gastado: " + dinero + ", Fecha: " + fecha);
+
+
         return sqLiteDatabase.insert(NOMBRE_TABLA,null,contentValues);
     }
 
@@ -105,4 +114,32 @@ public class DBHelper {
         }
 
     }
+
+    public void guardarEnArchivoTexto(String texto) {
+        try {
+            FileOutputStream fileOutputStream = context.openFileOutput("datos.txt", Context.MODE_PRIVATE);
+            fileOutputStream.write(texto.getBytes());
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String leerArchivoTexto() {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            FileInputStream fileInputStream = context.openFileInput("datos.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String linea;
+            while ((linea = bufferedReader.readLine()) != null) {
+                stringBuilder.append(linea).append("\n");
+            }
+            fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
+    }
+
 }
